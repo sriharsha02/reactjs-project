@@ -1,1 +1,0 @@
-let courseTitle = "ReactJS";
