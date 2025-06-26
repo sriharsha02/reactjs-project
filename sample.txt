@@ -1,1 +1,13 @@
 sample text 
+
+git clone
+
+git status
+
+git checkout -b courses main
+
+git add --all
+
+git commit -m message
+
+git push
