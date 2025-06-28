@@ -1,8 +1,14 @@
 import { useState } from "react";
+import { validateEmail } from "../Utils/utils";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [pword, setPword] = useState("");
+
+  //error variables
+
+  const [emailError, setEmailError] = useState("");
+  const [pwordError, setPwordError] = useState("");
   function handleEmailChange(e) {
     setEmail(e.target.value);
   }
@@ -12,7 +18,22 @@ function Login() {
   }
 
   function handleLoginData() {
-    console.log(email, pword);
+    let noOferrors = 0;
+    if (validateEmail(email)) {
+      setEmailError("");
+    } else {
+      setEmailError("Invalid Email");
+      noOferrors++;
+    }
+    if (pword.length < 8) {
+      setPwordError("Min 8 characters required");
+      noOferrors++;
+    } else {
+      setPwordError("");
+    }
+    if (noOferrors === 0) {
+      console.log("api called", noOferrors);
+    }
   }
   return (
     <div className="container">
@@ -29,6 +50,7 @@ function Login() {
                 handleEmailChange(e);
               }}
             />
+            <div className="text-danger">{emailError}</div>
           </div>
           <div className="mb-4">
             <label htmlFor="">Password</label>
@@ -40,6 +62,7 @@ function Login() {
                 handlePwordChange(e);
               }}
             />
+            <div className="text-danger">{pwordError}</div>
           </div>
           <div className="mb-4">
             <button
