@@ -1,3 +1,4 @@
+import Form from "./Auth/Form";
 function Home() {
   return (
     <div className="container">
@@ -7,6 +8,7 @@ function Home() {
           <div>
             <a href="/login">Login</a> <br />
             <a href="/create-account">Signup</a>
+            <Form />
           </div>
         </div>
       </div>

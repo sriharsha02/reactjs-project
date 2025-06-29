@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { validateEmail } from "../Utils/utils";
+import axios from "axios";
 
 function Signup() {
   const [name, setName] = useState("");
@@ -17,6 +18,10 @@ function Signup() {
 
   const [pwordError, setPwordError] = useState("");
 
+  const [apiErrorMsg, setApiErrorMsg] = useState("");
+
+  const [apiSuccessMsg, setApiSuccessMsg] = useState("");
+
   function handleNameChange(e) {
     setName(e.target.value);
   }
@@ -30,7 +35,7 @@ function Signup() {
   function handleMobileChange(e) {
     setMobile(e.target.value);
   }
-  function handleCreateAccount() {
+  async function handleCreateAccount() {
     let noOfErrors = 0;
     if (name.length < 3) {
       setNameError("Min 3 characters");
@@ -58,6 +63,25 @@ function Signup() {
     }
     if (noOfErrors === 0) {
       console.log("Calling api", noOfErrors);
+
+      let apiInputData = {
+        email: email,
+        name: name,
+        password: pword,
+        mobile: mobile,
+      };
+      let apiResponse = await axios.post(
+        "https://api.softwareschool.co/auth/signup",
+        apiInputData
+      );
+      console.log(apiResponse.data);
+      if (apiResponse.data.result == "SUCCESS") {
+        setApiSuccessMsg(apiResponse.data.message);
+        setApiErrorMsg("");
+      } else {
+        setApiErrorMsg(apiResponse.data.message);
+        setApiSuccessMsg("");
+      }
     }
   }
   return (
@@ -126,6 +150,10 @@ function Signup() {
           <div>
             <a href="/login">Login</a> <br />
             <a href="/">Home</a>
+          </div>
+          <div className="mt-3">
+            <div className="alert alert-danger">{apiErrorMsg}</div>
+            <div className="alert alert-success">{apiSuccessMsg}</div>
           </div>
           {name} <br />
           {email} <br />
