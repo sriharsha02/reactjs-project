@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { validateEmail } from "../Utils/utils";
+import axios from "axios";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,9 @@ function Login() {
 
   const [emailError, setEmailError] = useState("");
   const [pwordError, setPwordError] = useState("");
+
+  const [apiErrorMsg, setApiErrorMsg] = useState("");
+  const [apiSuccessMsg, setApiSuccessMsg] = useState("");
   function handleEmailChange(e) {
     setEmail(e.target.value);
   }
@@ -17,7 +21,7 @@ function Login() {
     setPword(e.target.value);
   }
 
-  function handleLoginData() {
+  async function handleLoginData() {
     let noOferrors = 0;
     if (validateEmail(email)) {
       setEmailError("");
@@ -32,7 +36,31 @@ function Login() {
       setPwordError("");
     }
     if (noOferrors === 0) {
-      console.log("api called", noOferrors);
+      console.log("No Errors, call login API");
+
+      let apiInputData = {
+        email: email,
+        password: pword,
+      };
+      console.log(apiInputData);
+      try {
+        let apiResponse = await axios.post(
+          "https://api.softwareschool.co/auth/login",
+          apiInputData
+        );
+        console.log(apiResponse);
+        if (apiResponse.data.result == "SUCCESS") {
+          setApiSuccessMsg(apiResponse.data.message);
+          setApiErrorMsg("");
+        } else {
+          setApiErrorMsg(apiResponse.data.message);
+          setApiSuccessMsg("");
+        }
+      } catch (error) {
+        console.log(error);
+        setApiErrorMsg(error.message);
+        setApiSuccessMsg("");
+      }
     }
   }
   return (
@@ -77,6 +105,10 @@ function Login() {
           <div>
             <a href="/create-account">Signup</a> <br />
             <a href="/">Home</a>
+          </div>
+          <div className="mt-3">
+            <div className="alert alert-success">{apiSuccessMsg}</div>
+            <div className="alert alert-danger">{apiErrorMsg}</div>
           </div>
           {email} <br />
           {pword}
