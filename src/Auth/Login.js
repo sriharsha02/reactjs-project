@@ -52,6 +52,9 @@ function Login() {
         if (apiResponse.data.result == "SUCCESS") {
           setApiSuccessMsg(apiResponse.data.message);
           setApiErrorMsg("");
+          console.log(apiResponse.data.data.userId);
+          localStorage.setItem("loggedInUserId", apiResponse.data.data.userId);
+          window.location = "/";
         } else {
           setApiErrorMsg(apiResponse.data.message);
           setApiSuccessMsg("");
